@@ -1,0 +1,44 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/03/a/RAM64.hdl
+
+/**
+ * Memory of 64 registers, each 16 bit-wide. Out holds the value
+ * stored at the memory location specified by address. If load==1, then 
+ * the in value is loaded into the memory location specified by address 
+ * (the loaded value will be emitted to out from the next time step onward).
+ */
+
+CHIP RAM64 {
+    IN in[16], load, address[6];
+    OUT out[16];
+
+    PARTS:
+    DMux8Way(in=true,sel=address[0..2],a=o000,b=o001,c=o010,d=o011,e=o100,f=o101,g=o110,h=o111);
+    DMux8Way(in=load,sel=address[0..2],a=l000,b=l001,c=l010,d=l011,e=l100,f=l101,g=l110,h=l111);
+
+RAM8(in=in,load=l000,address=address[3..5],out=out000);
+And16(a=out000, b[0]=o000,  b[1]=o000,  b[2]=o000,  b[3]=o000,  b[4]=o000,  b[5]=o000,  b[6]=o000,  b[7]=o000,  b[8]=o000,  b[9]=o000,  b[10]=o000,  b[11]=o000,  b[12]=o000,  b[13]=o000,  b[14]=o000,  b[15]=o000, out=outF000);
+RAM8(in=in,load=l001,address=address[3..5],out=out001);
+And16(a=out001, b[0]=o001,  b[1]=o001,  b[2]=o001,  b[3]=o001,  b[4]=o001,  b[5]=o001,  b[6]=o001,  b[7]=o001,  b[8]=o001,  b[9]=o001,  b[10]=o001,  b[11]=o001,  b[12]=o001,  b[13]=o001,  b[14]=o001,  b[15]=o001, out=outF001);
+RAM8(in=in,load=l010,address=address[3..5],out=out010);
+And16(a=out010, b[0]=o010,  b[1]=o010,  b[2]=o010,  b[3]=o010,  b[4]=o010,  b[5]=o010,  b[6]=o010,  b[7]=o010,  b[8]=o010,  b[9]=o010,  b[10]=o010,  b[11]=o010,  b[12]=o010,  b[13]=o010,  b[14]=o010,  b[15]=o010, out=outF010);
+RAM8(in=in,load=l011,address=address[3..5],out=out011);
+And16(a=out011, b[0]=o011,  b[1]=o011,  b[2]=o011,  b[3]=o011,  b[4]=o011,  b[5]=o011,  b[6]=o011,  b[7]=o011,  b[8]=o011,  b[9]=o011,  b[10]=o011,  b[11]=o011,  b[12]=o011,  b[13]=o011,  b[14]=o011,  b[15]=o011, out=outF011);
+RAM8(in=in,load=l100,address=address[3..5],out=out100);
+And16(a=out100, b[0]=o100,  b[1]=o100,  b[2]=o100,  b[3]=o100,  b[4]=o100,  b[5]=o100,  b[6]=o100,  b[7]=o100,  b[8]=o100,  b[9]=o100,  b[10]=o100,  b[11]=o100,  b[12]=o100,  b[13]=o100,  b[14]=o100,  b[15]=o100, out=outF100);
+RAM8(in=in,load=l101,address=address[3..5],out=out101);
+And16(a=out101, b[0]=o101,  b[1]=o101,  b[2]=o101,  b[3]=o101,  b[4]=o101,  b[5]=o101,  b[6]=o101,  b[7]=o101,  b[8]=o101,  b[9]=o101,  b[10]=o101,  b[11]=o101,  b[12]=o101,  b[13]=o101,  b[14]=o101,  b[15]=o101, out=outF101);
+RAM8(in=in,load=l110,address=address[3..5],out=out110);
+And16(a=out110, b[0]=o110,  b[1]=o110,  b[2]=o110,  b[3]=o110,  b[4]=o110,  b[5]=o110,  b[6]=o110,  b[7]=o110,  b[8]=o110,  b[9]=o110,  b[10]=o110,  b[11]=o110,  b[12]=o110,  b[13]=o110,  b[14]=o110,  b[15]=o110, out=outF110);
+RAM8(in=in,load=l111,address=address[3..5],out=out111);
+And16(a=out111, b[0]=o111,  b[1]=o111,  b[2]=o111,  b[3]=o111,  b[4]=o111,  b[5]=o111,  b[6]=o111,  b[7]=o111,  b[8]=o111,  b[9]=o111,  b[10]=o111,  b[11]=o111,  b[12]=o111,  b[13]=o111,  b[14]=o111,  b[15]=o111, out=outF111);
+    Or16(a=outF000,b=outF001,out=outF1);
+    Or16(a=outF1,b=outF010,out=outF2);
+    Or16(a=outF2,b=outF011,out=outF3);
+    Or16(a=outF3,b=outF100,out=outF4);
+    Or16(a=outF4,b=outF101,out=outF5);
+    Or16(a=outF5,b=outF110,out=outF6);
+    Or16(a=outF6,b=outF111,out=out);
+}

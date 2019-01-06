@@ -1,0 +1,11 @@
+
+
+
+
+CHIP Test {
+    IN  in[16];
+    OUT out[16];
+
+    PARTS:
+    And16(a=in,b[0]=ad001,b[1]=ad001,b[2]=ad001,b[3]=ad001,b[4]=ad001,b[5]=ad001,b[6]=ad001,b[7]=ad001,out=out);
+}
