@@ -40,4 +40,43 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+    //if C instr and d3=1
+    And(a=instruction[15],b=instruction[3],out=writeM);
+
+    //if A instr
+    Not(in=instruction[15],out=Ainstr);
+
+    //if C instr and load A reg
+    And(a=instruction[15],b=instruction[5],out=loadAreg);
+    
+    //if A instr or (C instr and store to A) => loadAreg
+    Or(a=Ainstr,b=loadAreg,out=storeAreg);
+
+    //choose if store ALU output or A instr input
+    Mux16(a=instruction,b=aluOut,sel=instruction[15], out=outI);
+    ARegister(in=outI,load=storeAreg,out=outA,out[0..14]=addressM);
+    
+    And(a=instruction[4],b=instruction[15],out=loadDreg);
+    DRegister(in=aluOut,load=loadDreg, out=outD);
+    
+    //select input of ALU: A or M register
+    Mux16(a=outA,b=inM,sel=instruction[12], out=secondAluReg);
+
+    ALU(x=outD,y=secondAluReg,zx=instruction[11],nx=instruction[10],zy=instruction[9],ny=instruction[8],f=instruction[7],no=instruction[6],out=aluOut,zr=zr,ng=ng,out=outM);
+    
+    //
+    And(a=instruction[2],b=ng,out=j1);
+    And(a=instruction[1],b=zr,out=j2);
+    
+    Not(in=ng, out=notNg);
+    Not(in=zr, out=notZr);
+    And(a=notNg,b=notZr, out=greaterZr);
+    And(a=instruction[0],b=greaterZr, out=j3);
+    
+    Or(a=j1,b=j2,out=j1j2);
+    Or(a=j1j2,b=j3,out=j1j2j3);
+    And(a=j1j2j3,b=instruction[15],out=jump);
+    Not(in=jump,out=notjump);
+
+    PC(in=outA, load=jump, inc=notjump, reset=reset, out[0..14]=pc);
 }

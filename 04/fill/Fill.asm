@@ -13,36 +13,39 @@
 
 // Put your code here.
 
-// if (board != 0) than M[0] = 1
-// 	else M[0] = 0
-
-
+//!!! Screen doesn't react if I comment this declaration
+//@ones
 (LOOP)
-@R13
-M=1
-@BLACK_SCREEN
+
+@KBD
+D=M
+
+@SET_ONE
+D;JNE
+@R14
+M=0
+@END_SET
 0;JMP
 
 (SET_ONE)
-@R5
-M=1
 @R14
 M=-1
-@R13
-M=1
+(END_SET)
+
 @BLACK_SCREEN
 0;JMP
 
 
 //start of black screen
-//@R14 which color; @R13 where to return
+//@R14 which color
 (BLACK_SCREEN)
-    
+    //i = 256
     @256
     D=A
     @i
     M=D
     
+    //index = 0
     @index
     M=0
 
@@ -53,13 +56,13 @@ M=1
 	@END_EXT_LOOP
 	D;JEQ
 
-	    //payload
+	    //j = 32
 	    @32
 	    D=A
 	    @j
 	    M=D
-	    (INNER_LOOP)
 
+	    (INNER_LOOP)
     	        //if (j==0) goto END_INNER_LOOP
 		@j
 		D=M
@@ -75,19 +78,6 @@ M=1
 		@temp
 		M=D
 		
-		@KBD
-		D=M
-		@SET_ONE
-		D;JNE
-		@R14
-		M=0
-		@END_SET
-		0;JMP
-
-		(SET_ONE)
-		@R14
-		M=-1
-		(END_SET)
 
 		@R14
 		D=M
@@ -95,10 +85,9 @@ M=1
 		A=M
 		M=D
 
-		//j=j-1; index++
-		@j
+		@j //j=j-1
 		M=M-1
-		@index
+		@index //index++
 		M=M+1
 		
 		@INNER_LOOP
@@ -112,7 +101,6 @@ M=1
 	0;JMP
 
 (END_EXT_LOOP)
-//return to calling code
-@R13
-A=M
+//return to the main loop
+@1
 0;JMP
