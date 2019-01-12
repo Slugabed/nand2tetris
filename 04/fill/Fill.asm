@@ -16,6 +16,7 @@
 //!!! Screen doesn't react if I comment this declaration
 //@ones
 (LOOP)
+@somevar
 
 @KBD
 D=M
